@@ -3,7 +3,7 @@
 // @namespace    askAuto
 // @version      1.0.1
 // @author       倪爸爸
-// @description  🐔【超星学习通挂科助手】魔改自“💯超星学习通满分助手”，增加了OCS网课助手里那种自动回答视频内容以防止视频被卡，修改了许多不合理设定，优化了视频观看体验，适应学习通更多的情景
+// @description  [ 1.0.1 ] 更新日志：公测版推送，内测版本降级回退
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -32,8 +32,11 @@
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
 // @run-at       document-end
+// @license      MIT
 // @antifeature  ads      脚本可能包含第三方接口广告
 // @antifeature  payment  脚本存在第三方答题接口付费功能
+// @downloadURL https://update.greasyfork.org/scripts/508068/%F0%9F%90%94%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B%E3%80%91.user.js
+// @updateURL https://update.greasyfork.org/scripts/508068/%F0%9F%90%94%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B%E3%80%91.meta.js
 // ==/UserScript==
 
 (t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:10 !important}");
