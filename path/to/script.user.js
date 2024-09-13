@@ -33,6 +33,9 @@
 // @grant        unsafeWindow
 // @run-at       document-end
 // @license      MIT
+// @homepage     https://github.com/NiButCrazy/FuckSuperStarLearing
+// @source       https://github.com/NiButCrazy/FuckSuperStarLearing
+// @website      https://github.com/NiButCrazy/FuckSuperStarLearing
 // @antifeature  ads      脚本可能包含第三方接口广告
 // @antifeature  payment  脚本存在第三方答题接口付费功能
 // @downloadURL https://update.greasyfork.org/scripts/508068/%F0%9F%90%94%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B%E3%80%91.user.js
