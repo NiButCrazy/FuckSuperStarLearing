@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
-// @namespace    askAuto
-// @version      1.0.1
+// @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @description  [ 1.0.1 ] 更新日志：公测版推送，内测版本降级回退
+// @version      1.0.2
+// @description  [ 1.0.2 ] 更新日志：公测版推送，内测版本降级回退，修复命名空间BUG
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
