@@ -8,7 +8,6 @@ FuckSuperStarLearing
 ![GitHub last commit](https://img.shields.io/github/last-commit/NiButCrazy/FuckSuperStarLearing?label=%E6%9B%B4%E6%96%B0%E6%97%B6%E9%97%B4)
 
 
-
 ## 简介
 #### *作者：倪爸爸*  
 
@@ -26,6 +25,12 @@ FuckSuperStarLearing
 ## 发布情况
 处于 **未上架** 的调试状态，后续会不断更新并修复BUG  
 若有问题请↓↓↓↓↓↓  
->***微信*** 联系 **倪爸爸本人**   
+
+>**Greasy Fork**：[反馈BUG](https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B/feedback)  
+或者  
+>**微信**：倪爸爸本人  
 或者  
 >**邮箱**：3104955349@qq.com
+
+## 贡献者
+![https://github.com/NiButCrazy/FuckSuperStarLearing/graphs/contributors](https://contrib.rocks/image?repo=NiButCrazy/FuckSuperStarLearing)
