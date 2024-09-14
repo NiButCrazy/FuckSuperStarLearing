@@ -19,6 +19,9 @@ FuckSuperStarLearing
 * 优化了操作逻辑
 * ***小黑子警告***
 
+## 更新日志
+[点我查看](https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+
 ## 更新问题
 >新脚本更新写完我会提交到`Github`开源仓库，然后会自动Hook到`greasyfork`，接着网站会推送更新并发送通知，所以不用着急
 
