@@ -1,0 +1,16 @@
+# 更新日志
+
+*日志使用 [Simple Changelog 汉化版](https://github.com/NiButCrazy/simple-changelog-Chinese) 生成*
+
+## [1.0.1] - 2024-09-14
+### 新增加内容
+- 添加LICENSE
+- 添加了主页地址
+- 添加CHANGELOG更新日志
+
+### 修复错误
+- 修复了一些小BUG
+
+### 文档变化
+- 修订了自述文件和脚本元数据属性
+- 改进了自述文件
