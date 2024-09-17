@@ -2,8 +2,8 @@
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @version      1.0.3
-// @description  [ 1.0.3 ] 修复了空间内无法显示账号管理，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.0.4
+// @description  [ 1.0.4 ] 添加了自动刷新页面的选项，修复了右上角消息被遮盖的BUG，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -40,7 +40,7 @@
 // @antifeature  payment  脚本存在第三方答题接口付费功能
 // ==/UserScript==
 
-(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:!important}");
+(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:999}.el-notification{z-index:99999}");
 
 (async function (vue, pinia$1, ElementPlus, md5, $$1) {
     var __defProp = Object.defineProperty;
@@ -60,9 +60,10 @@
         return config || defaultConfig$1;
     }, defaultConfig$1 = { 
         debugger: false, autoAnswer: true, autoVideo: true, autoVideoAnswer:true, icon:false, autoJump: true, autoSubmit: true, thtoken: "", yztoken: "", gptKey: "",gptModel: "gpt-3.5-turbo", gpt: false, gptType: ["0", "1", "2", "3", "4", "5", "6", "7"], interval: 3, 
-        answerInterval: 3, minAccuracy: 0.8, videoRate: 1, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
+        answerInterval: 3, minAccuracy: 0.8, videoRate: 1,autoRefresh: false, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
             { name: "base", label: "基础配置", config: [
                 { name: "icon",symbol: "icon", label: "本地黑化", type: "switch", value: defaultConfig$1.icon, desc: "获得鸽鸽的无上力量" }, 
+                { name: "autoRefresh",symbol: "autoRefresh", label: "自动刷新", type: "switch", value: defaultConfig$1.autoRefresh, desc: "保存配置后自动刷新页面" }, 
                 { name: "interval", symbol:"interval",label: "通用间隔(秒)", type: "number", value: defaultConfig$1.interval, desc: "通用间隔，用于脚本运行切换" }, 
                 { name: "answerInterval",symbol: "answerInterval", label: "答题间隔(秒)", type: "number", value: defaultConfig$1.answerInterval, desc: "控制答题速度" }, 
                 { name: "thtoken",symbol: "thtoken", label: "题库海的秘钥", type: "input", value: defaultConfig$1.thtoken, desc: "非必填，购买后可获得，填写完请保存再刷新页面" }, 
@@ -121,7 +122,11 @@
             return {
                 dialogV, activeName, ruleFormRef, forminput, rules, submitForm: async (formEl) => {
                     formEl && await formEl.validate((valid, fields) => {
-                        valid && (formstoreObj.saveConfig(forminput.value), ElementPlus.ElNotification({ title: "配置保存成功", message: "刷新页面以应用更改", type: "success" }), dialogV.value = false);
+                        valid && (
+                            formstoreObj.saveConfig(forminput.value), 
+                            formStore.forminput.autoRefresh?location.reload():ElementPlus.ElNotification({ title: "配置保存成功", message: "刷新页面以应用更改", type: "success" }), 
+                            dialogV.value = false
+                        );
                     });
                 }, userConfig, Setting: setting_default
             };
@@ -139,7 +144,113 @@
             nbc_function()
         }
         const _component_el_button = vue.resolveComponent("el-button"), _component_el_switch = vue.resolveComponent("el-switch"), _component_el_input = vue.resolveComponent("el-input"), _component_el_input_number = vue.resolveComponent("el-input-number"), _component_el_option = vue.resolveComponent("el-option"), _component_el_select = vue.resolveComponent("el-select"), _component_el_checkbox = vue.resolveComponent("el-checkbox"), _component_el_checkbox_group = vue.resolveComponent("el-checkbox-group"), _component_el_tooltip = vue.resolveComponent("el-tooltip"), _component_el_form_item = vue.resolveComponent("el-form-item"), _component_el_tab_pane = vue.resolveComponent("el-tab-pane"), _component_el_tabs = vue.resolveComponent("el-tabs"), _component_el_form = vue.resolveComponent("el-form"), _component_el_dialog = vue.resolveComponent("el-dialog");
-        return vue.openBlock(),vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, { type: "danger", id: "csbutton", icon: _ctx.Setting, circle: "", onClick: more_function}, null, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogV, "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => _ctx.dialogV = $event), title: "🐔超星修仙通挂科助手", width: "30%", modal: false, center: "", draggable: "" }, { footer: vue.withCtx(() => [vue.createElementVNode("span", _hoisted_1$1, [vue.createVNode(_component_el_button, { onClick: _cache[2] || (_cache[2] = ($event) => _ctx.dialogV = false) }, { default: vue.withCtx(() => [vue.createTextVNode("取消")]), _: 1 }), vue.createVNode(_component_el_button, { type: "primary", onClick: _cache[3] || (_cache[3] = ($event) => _ctx.submitForm(_ctx.ruleFormRef)) }, { default: vue.withCtx(() => [vue.createTextVNode("保存")]), _: 1 })])]), default: vue.withCtx(() => [vue.createVNode(_component_el_form, { ref: "ruleFormRef", rules: _ctx.rules, model: _ctx.forminput, class: "demo-ruleForm" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tabs, { class: "demo-tabs", modelValue: _ctx.activeName, "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => _ctx.activeName = $event) }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.userConfig, (item) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { key: item.name, label: item.label, name: item.name }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item.config, (item1) => (vue.openBlock(), vue.createBlock(_component_el_form_item, { label: item1.label, prop: item1.name }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tooltip, { class: "box-item", effect: "dark", content: item1.desc || "", placement: "top" }, { default: vue.withCtx(() => ["switch" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_switch, { key: 0,symbol:item1.symbol, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "input" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input, { key: 1, modelValue: _ctx.forminput[item1.name],symbol:item1.symbol, "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "number" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input_number, { key: 2, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "select" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_select, { key: 3, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event, placeholder: "请选择" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_option, { key: item2.value, label: item2.label, value: item2.value }, null, 8, ["label", "value"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : "checkbox" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_checkbox_group, { key: 4, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_checkbox, { key: item2.value, label: item2.value, name: item2.value }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item2.label), 1)]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : vue.createCommentVNode("", true)]), _: 2 }, 1032, ["content"])]), _: 2 }, 1032, ["label", "prop"]))), 256))]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 1 }, 8, ["modelValue"])]), _: 1 }, 8, ["rules", "model"])]), _: 1 }, 8, ["modelValue"])], 64);
+        const result = (vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, {
+            type: "danger",
+            id: "csbutton",
+            icon: _ctx.Setting,
+            circle: "",
+            onClick: more_function
+        }, null, 8, ["icon"]), vue.createVNode(_component_el_dialog, {
+            modelValue: _ctx.dialogV,
+            "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => _ctx.dialogV = $event),
+            title: "🐔超星修仙通挂科助手",
+            width: "30%",
+            modal: false,
+            center: "",
+            draggable: ""
+        }, {
+            footer: vue.withCtx(() => [vue.createElementVNode("span", _hoisted_1$1, [vue.createVNode(_component_el_button, {
+                onClick: _cache[2] || (_cache[2] = ($event) => _ctx.dialogV = false)
+            }, {
+                default: vue.withCtx(() => [vue.createTextVNode("取消")]),
+                _: 1
+            }), vue.createVNode(_component_el_button, {
+                type: "primary",
+                onClick: _cache[3] || (_cache[3] = ($event) => _ctx.submitForm(_ctx.ruleFormRef))
+            }, {
+                default: vue.withCtx(() => [vue.createTextVNode("保存")]),
+                _: 1
+            })])]),
+            default: vue.withCtx(() => [vue.createVNode(_component_el_form, {
+                ref: "ruleFormRef",
+                rules: _ctx.rules,
+                model: _ctx.forminput,
+                class: "demo-ruleForm"
+            }, {
+                default: vue.withCtx(() => [vue.createVNode(_component_el_tabs, {
+                    class: "demo-tabs",
+                    modelValue: _ctx.activeName,
+                    "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => _ctx.activeName = $event)
+                }, {
+                    default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.userConfig, (item) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, {
+                        key: item.name,
+                        label: item.label,
+                        name: item.name
+                    }, {
+                        default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item.config, (item1) => (vue.openBlock(), vue.createBlock(_component_el_form_item, {
+                            label: item1.label,
+                            prop: item1.name
+                        }, {
+                            default: vue.withCtx(() => [vue.createVNode(_component_el_tooltip, {
+                                class: "box-item",
+                                effect: "dark",
+                                content: item1.desc || "",
+                                placement: "top"
+                            }, {
+                                default: vue.withCtx(() => ["switch" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_switch, {
+                                    key: 0,
+                                    symbol: item1.symbol,
+                                    modelValue: _ctx.forminput[item1.name],
+                                    "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "input" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input, {
+                                    key: 1,
+                                    modelValue: _ctx.forminput[item1.name],
+                                    symbol: item1.symbol,
+                                    "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "number" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input_number, {
+                                    key: 2,
+                                    modelValue: _ctx.forminput[item1.name],
+                                    "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "select" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_select, {
+                                    key: 3,
+                                    modelValue: _ctx.forminput[item1.name],
+                                    "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event,
+                                    placeholder: "请选择"
+                                }, {
+                                    default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_option, {
+                                        key: item2.value,
+                                        label: item2.label,
+                                        value: item2.value
+                                    }, null, 8, ["label", "value"]))), 128))]),
+                                    _: 2
+                                }, 1032, ["modelValue", "onUpdate:modelValue"])) : "checkbox" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_checkbox_group, {
+                                    key: 4,
+                                    modelValue: _ctx.forminput[item1.name],
+                                    "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event
+                                }, {
+                                    default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_checkbox, {
+                                        key: item2.value,
+                                        label: item2.value,
+                                        name: item2.value
+                                    }, {
+                                        default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item2.label), 1)]),
+                                        _: 2
+                                    }, 1032, ["label", "name"]))), 128))]),
+                                    _: 2
+                                }, 1032, ["modelValue", "onUpdate:modelValue"])) : vue.createCommentVNode("", true)]),
+                                _: 2
+                            }, 1032, ["content"])]),
+                            _: 2
+                        }, 1032, ["label", "prop"]))), 256))]),
+                        _: 2
+                    }, 1032, ["label", "name"]))), 128))]),
+                    _: 1
+                }, 8, ["modelValue"])]),
+                _: 1
+            }, 8, ["rules", "model"])]),
+            _: 1
+        }, 8, ["modelValue"])], 64))
+        return result
     }], ["__scopeId", "data-v-6ed29f7f"]]);
     let defaultConfig = getConfig();
     class ServerApi {
@@ -1568,7 +1679,11 @@
                     askstore.select(e);
                 }, dialogV, activeName, ruleFormRef, forminput, rules, submitForm: async (formEl) => {
                     formEl && await formEl.validate((valid, fields) => {
-                        valid && (formstoreObj.saveConfig(forminput.value), ElementPlus.ElNotification({ title: "配置保存成功", message: "刷新页面以应用更改", type: "success" }), dialogV.value = false);
+                        valid && (
+                            formstoreObj.saveConfig(forminput.value), 
+                            formStore.forminput.autoRefresh?location.reload():ElementPlus.ElNotification({ title: "配置保存成功", message: "刷新页面以应用更改", type: "success" }), 
+                            dialogV.value = false
+                        );
                     });
                 }, userConfig, Setting: setting_default
             };
