@@ -2049,7 +2049,13 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
                 div_icon.prepend(new_jitang)
             }
             if ($('#checkUpdate').length == 0) {
-                new_checkUpdate=$(`<div id='checkUpdate'>当前版本: ${script_version} &nbsp&nbsp <span style='color:green'>已是最新版本</span></div>`)
+                if(if_updata){
+                    new_checkUpdate=$(`<div id='checkUpdate'>当前版本: ${script_version} &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span></div>`)
+                }else{
+                    new_checkUpdate=$(`<div id='checkUpdate'>当前版本: ${script_version} &nbsp&nbsp <span style='color:green'>已是最新版本</span></div>`)
+                    
+                }
+                
                 new_checkUpdate.click(check_update)
                 new_checkUpdate.css({"position":"relative","text-align":"center","bottom":"20px","font-size":"10px","margin":"0","cursor":"pointer"})
                 div_checkUpdate.prepend(new_checkUpdate)
@@ -2122,6 +2128,7 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
             }
         }, 3000);
     }
+    var if_updata = false;
     function check_update() {
         // 检查更新
         if (new_checkUpdate) {
@@ -2135,15 +2142,16 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
                     let version = element.slice(11,).trim()
                     if (version > script_version) {
                         console.log(version)
-                        ElementPlus.ElNotification({ title: "检测到脚本有新版本可用", message: "将自动跳转到更新界面",type:"waring"});
+                        ElementPlus.ElNotification({ title: "检测到脚本有新版本可用", message: "将自动跳转到更新界面",type:"warning"});
                         if (new_checkUpdate) {
                             new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span>")
                         }
-                        
+                        if_updata = true
                         setTimeout(() => {
                             window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
                         },3000)
                     }else{
+                        if_updata = false
                         if (new_checkUpdate) {
                             new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:green'>已是最新版本</span>")
                         }
