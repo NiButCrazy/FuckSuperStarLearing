@@ -1,9 +1,10 @@
+var script_version = "1.0.5"; //内置版本!!!!!!!
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @version      1.0.4
-// @description  [ 1.0.4 ] 添加了自动刷新页面的选项，修复了右上角消息被遮盖的BUG，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.0.5
+// @description  [ 1.0.5 ] 添加了自动检查更新的功能，美化了坤坤通知图标，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -40,7 +41,7 @@
 // @antifeature  payment  脚本存在第三方答题接口付费功能
 // ==/UserScript==
 
-(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:999}.el-notification{z-index:99999}");
+(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:999}.el-notification{z-index:99999}.el-tabs__content{overflow:visible !important}");
 
 (async function (vue, pinia$1, ElementPlus, md5, $$1) {
     var __defProp = Object.defineProperty;
@@ -60,7 +61,7 @@
         return config || defaultConfig$1;
     }, defaultConfig$1 = { 
         debugger: false, autoAnswer: true, autoVideo: true, autoVideoAnswer:true, icon:false, autoJump: true, autoSubmit: true, thtoken: "", yztoken: "", gptKey: "",gptModel: "gpt-3.5-turbo", gpt: false, gptType: ["0", "1", "2", "3", "4", "5", "6", "7"], interval: 3, 
-        answerInterval: 3, minAccuracy: 0.8, videoRate: 1,autoRefresh: false, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
+        answerInterval: 3, minAccuracy: 0.8, videoRate: 1,checkUpdate:true,autoRefresh: false, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
             { name: "base", label: "基础配置", config: [
                 { name: "icon",symbol: "icon", label: "本地黑化", type: "switch", value: defaultConfig$1.icon, desc: "获得鸽鸽的无上力量" }, 
                 { name: "autoRefresh",symbol: "autoRefresh", label: "自动刷新", type: "switch", value: defaultConfig$1.autoRefresh, desc: "保存配置后自动刷新页面" }, 
@@ -80,7 +81,8 @@
                 { name: "minAccuracy",symbol: "minAccuracy", label: "最低正确率", type: "input", value: defaultConfig$1.minAccuracy, desc: "不满足最低正确率则不会自动提交答案" }
             ] 
             }, 
-            { name: "exam", label: "作业/考试配置", config: [
+            { name: "exam", label: "作业/考试/更新配置", config: [
+                { name: "checkUpdate",symbol:"checkUpdate", label: "更新自检通知", type: "switch", value: defaultConfig$1.checkUpdate, desc: "是否显示自检通知" },
                 { name: "autoExam", label: "考试自动切换", type: "switch", value: defaultConfig$1.autoExam, desc: "考试会自动切换题目" }
             ] 
             }
@@ -142,7 +144,9 @@
         function more_function() {
             _ctx.dialogV = !_ctx.dialogV
             nbc_function()
+            
         }
+
         const _component_el_button = vue.resolveComponent("el-button"), _component_el_switch = vue.resolveComponent("el-switch"), _component_el_input = vue.resolveComponent("el-input"), _component_el_input_number = vue.resolveComponent("el-input-number"), _component_el_option = vue.resolveComponent("el-option"), _component_el_select = vue.resolveComponent("el-select"), _component_el_checkbox = vue.resolveComponent("el-checkbox"), _component_el_checkbox_group = vue.resolveComponent("el-checkbox-group"), _component_el_tooltip = vue.resolveComponent("el-tooltip"), _component_el_form_item = vue.resolveComponent("el-form-item"), _component_el_tab_pane = vue.resolveComponent("el-tab-pane"), _component_el_tabs = vue.resolveComponent("el-tabs"), _component_el_form = vue.resolveComponent("el-form"), _component_el_dialog = vue.resolveComponent("el-dialog");
         const result = (vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, {
             type: "danger",
@@ -1695,7 +1699,6 @@
             _ctx.dialogV = !_ctx.dialogV
             nbc_function()
         }
-
         const _component_el_button = vue.resolveComponent("el-button"), _component_el_switch = vue.resolveComponent("el-switch"), _component_el_input = vue.resolveComponent("el-input"), _component_el_input_number = vue.resolveComponent("el-input-number"), _component_el_option = vue.resolveComponent("el-option"), _component_el_select = vue.resolveComponent("el-select"), _component_el_checkbox = vue.resolveComponent("el-checkbox"), _component_el_checkbox_group = vue.resolveComponent("el-checkbox-group"), _component_el_tooltip = vue.resolveComponent("el-tooltip"), _component_el_form_item = vue.resolveComponent("el-form-item"), _component_el_tab_pane = vue.resolveComponent("el-tab-pane"), _component_el_tabs = vue.resolveComponent("el-tabs"), _component_el_form = vue.resolveComponent("el-form"), _component_el_dialog = vue.resolveComponent("el-dialog"), _component_el_text = vue.resolveComponent("el-text"), _component_el_skeleton = vue.resolveComponent("el-skeleton"), _component_el_card = vue.resolveComponent("el-card"), _component_el_divider = vue.resolveComponent("el-divider"), _component_el_col = vue.resolveComponent("el-col"), _component_el_row = vue.resolveComponent("el-row"), _component_el_scrollbar = vue.resolveComponent("el-scrollbar"), _component_el_tag = vue.resolveComponent("el-tag"), _component_el_alert = vue.resolveComponent("el-alert"), _component_el_empty = vue.resolveComponent("el-empty");
         return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, { type: "danger", id: "csbutton", icon: _ctx.Setting, circle: "", onClick: more_function }, null, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogV, "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => _ctx.dialogV = $event), title: "🐔超星修仙通挂科助手", width: "30%", modal: false, center: "", draggable: "" }, { footer: vue.withCtx(() => [vue.createElementVNode("span", _hoisted_1, [vue.createVNode(_component_el_button, { onClick: _cache[2] || (_cache[2] = ($event) => _ctx.dialogV = false) }, { default: vue.withCtx(() => [vue.createTextVNode("取消")]), _: 1 }), vue.createVNode(_component_el_button, { type: "primary", onClick: _cache[3] || (_cache[3] = ($event) => _ctx.submitForm(_ctx.ruleFormRef)) }, { default: vue.withCtx(() => [vue.createTextVNode("保存")]), _: 1 })])]), default: vue.withCtx(() => [vue.createVNode(_component_el_form, { ref: "ruleFormRef", rules: _ctx.rules, model: _ctx.forminput, class: "demo-ruleForm" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tabs, { class: "demo-tabs", modelValue: _ctx.activeName, "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => _ctx.activeName = $event) }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.userConfig, (item) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { key: item.name, label: item.label, name: item.name }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item.config, (item1) => (vue.openBlock(), vue.createBlock(_component_el_form_item, { label: item1.label, prop: item1.name }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tooltip, { class: "box-item", effect: "dark", content: item1.desc || "", placement: "top" }, { default: vue.withCtx(() => ["switch" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_switch, { key: 0, symbol:item1.symbol, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "input" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input, { key: 1, symbol:item1.symbol,modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "number" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input_number, { key: 2, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "select" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_select, { key: 3, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event, placeholder: "请选择" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_option, { key: item2.value, label: item2.label, value: item2.value }, null, 8, ["label", "value"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : "checkbox" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_checkbox_group, { key: 4, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_checkbox, { key: item2.value, label: item2.value, name: item2.value }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item2.label), 1)]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : vue.createCommentVNode("", true)]), _: 2 }, 1032, ["content"])]), _: 2 }, 1032, ["label", "prop"]))), 256))]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 1 }, 8, ["modelValue"])]), _: 1 }, 8, ["rules", "model"])]), _: 1 }, 8, ["modelValue"]), (vue.openBlock(), vue.createBlock(vue.Teleport, { to: "body" }, [vue.createVNode(_component_el_button, { id: "zeokdjg", type: "success", plain: "", round: "", icon: _ctx.Aim, onClick: _cache[5] || (_cache[5] = ($event) => _ctx.dialogVisible = !_ctx.dialogVisible) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString("暂未加载" == _ctx.task.name ? "等待任务加载" : "正在完成:" + _ctx.task.name), 1)]), _: 1 }, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogVisible, "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => _ctx.dialogVisible = $event), width: "400px", title: "🐔超星修仙通挂科助手", modal: false, "append-to-body": false, "lock-scroll": false, center: "", draggable: "" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { style: { "margin-bottom": "20px" }, type: "primary", onClick: more_function, plain: "" }, { default: vue.withCtx(() => [vue.createTextVNode("打开配置")]), _: 1 }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode("")]), _: 1 }), vue.createVNode(_component_el_tabs, { modelValue: _ctx.askActiveName, "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => _ctx.askActiveName = $event), class: "demo-tabs" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tab_pane, { label: "运行框", name: "first" }, { default: vue.withCtx(() => [_ctx.task.work.questionList.length > 0 ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2, [vue.createElementVNode("div", _hoisted_3, [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("h1", _hoisted_4, [vue.createVNode(_component_el_text, { size: "large", truncated: "" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.work.inx + 1 + "." + _ctx.task.work.questionList[_ctx.task.work.inx].question), 1)]), _: 1 })]), _ctx.task.work.questionList[_ctx.task.work.inx].answer ? (vue.openBlock(), vue.createElementBlock("p", _hoisted_6, [vue.createElementVNode("p", null, [vue.createElementVNode("pre", null, vue.toDisplayString(_ctx.task.work.questionList[_ctx.task.work.inx].answer), 1)])])) : (vue.openBlock(), vue.createElementBlock("p", _hoisted_5, [vue.createVNode(_component_el_skeleton, { rows: 3, animated: "" })]))]), _: 1 })]), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_divider, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(" 题号 ")]), _: 1 })) : vue.createCommentVNode("", true), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_scrollbar, { key: 1, height: "100px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_col, { span: 4, key: index }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { type: item.status || "info", plain: "", class: "question_btn", onClick: ($event) => _ctx.handleClick(index) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(index + 1), 1)]), _: 2 }, 1032, ["type", "onClick"])]), _: 2 }, 1024))), 128))]), _: 1 })]), _: 1 })) : vue.createCommentVNode("", true), _ctx.task.work.questionList[_ctx.task.work.inx].allAnswer ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [vue.createVNode(_component_el_divider, null, { default: vue.withCtx(() => [vue.createTextVNode(" 接口返回 ")]), _: 1 }), vue.createVNode(_component_el_tabs, { "tab-position": "left", style: { height: "200px" }, class: "demo-tabs" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList[_ctx.task.work.inx].allAnswer, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { label: item.form }, { default: vue.withCtx(() => [vue.createElementVNode("div", null, [vue.createElementVNode("div", { innerHTML: (item.answer || "暂无答案") + "<br><p style = 'color:red;'>如果要填写付费秘钥，在本悬浮窗最上方的打开配置中填入秘钥，切记填写完要刷新页面才会生效</p>" }, null, 8, _hoisted_8), null != item.num ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "info" }, { default: vue.withCtx(() => [vue.createTextVNode("已用次数:" + vue.toDisplayString(item.usenum), 1)]), _: 2 }, 1024)]), vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "success" }, { default: vue.withCtx(() => [vue.createTextVNode("剩余次数:" + vue.toDisplayString(item.num), 1)]), _: 2 }, 1024)])])) : vue.createCommentVNode("", true)])]), _: 2 }, 1032, ["label"]))), 256))]), _: 1 })])) : vue.createCommentVNode("", true)])) : _ctx.task.video.status ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10, [vue.createVNode(_component_el_alert, { title: "倪爸爸提醒：倍速有风险，挂科两行泪", type: "error", center: "", "show-icon": "" }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode(" 正在完成视频任务 ")]), _: 1 })])) : (vue.openBlock(), vue.createElementBlock("div", _hoisted_11, [vue.createElementVNode("div", _hoisted_12, [vue.createVNode(_component_el_empty, { description: _ctx.task.name }, null, 8, ["description"])])]))]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "运行日志", name: "second" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_scrollbar, { height: "200px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [vue.createVNode(_component_el_col, { span: 24 }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.log, (item, index) => (vue.openBlock(), vue.createElementBlock("p", { key: index, class: "cx_log" }, [vue.createVNode(_component_el_text, { size: "small", type: "info", class: "mx-1" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item.time), 1)]), _: 2 }, 1024), vue.createVNode(_component_el_text, { class: "mx-1", type: "info" == item.type ? "" : item.type }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(" " + item.msg), 1)]), _: 2 }, 1032, ["type"])]))), 128))]), _: 1 })]), _: 1 })]), _: 1 })]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "公告", name: "msg" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("div", { innerHTML: _ctx.msg }, null, 8, _hoisted_13)]), _: 1 })]), _: 1 })]), _: 1 }, 8, ["modelValue"]), vue.createElementVNode("p", null, [_ctx.task.status ? (vue.openBlock(), vue.createBlock(_component_el_tag, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.status), 1)]), _: 1 })) : vue.createCommentVNode("", true)])]), _: 1 }, 8, ["modelValue"])]))], 64);
     }], ["__scopeId", "data-v-c3c6b09f"]]);
@@ -2003,7 +2006,7 @@
         "https://img0.baidu.com/it/u=78729940,187108890&fm=253&fmt=auto&app=120&f=JPEG?w=648&h=405"
     ]
     function switch_img(){
-        ElementPlus.ElNotification({ title: "律师函警告", message: "小黑子说话！",type:"error"});
+        ElementPlus.ElNotification({ title: "律师函警告", message: "小黑子说话！",type:"warning"});
         for (let index = 0; index < img_list.length; index++) {
             const element =img_list[index];
             if (element == ikun.src) {
@@ -2015,18 +2018,21 @@
             }
         }
     }
+    var new_checkUpdate
     function nbc_function(){
         Vue.nextTick(() => {
 
             var btn_autoVideo=$('div[symbol="autoVideo"]')
             var btn_autoJump=$('div[symbol="autoJump"]')
             var btn_icon=$('div[symbol="icon"]')
+            var checkUpdate=$('div[symbol="checkUpdate"]')
+            var div_checkUpdate = $(checkUpdate.parent().parent().parent())
             var label=btn_autoJump.parent().prev()
             var div_icon=$(btn_icon.parent().parent().parent())
             var switch_exam=$("#pane-exam")
             var ikun=null
-            switch_exam.css("overflow","visible")
             
+            switch_exam.css("overflow","visible")
             if (switch_exam.find('img').length == 0) {
                 var new_img=$('<img id="ikun" src="https://i0.hdslb.com/bfs/article/66762246d5de03d98440e90f69e6524f293738dc.jpg@!web-article-pic.avif" width="100%" title="小黑子别戳我" style="border-radius:12px">')
                 new_img.click(switch_img)
@@ -2042,6 +2048,12 @@
                 get_text(new_jitang)
                 div_icon.prepend(new_jitang)
             }
+            if ($('#checkUpdate').length == 0) {
+                new_checkUpdate=$(`<div id='checkUpdate'>当前版本: ${script_version} &nbsp&nbsp <span style='color:green'>已是最新版本</span></div>`)
+                new_checkUpdate.click(check_update)
+                new_checkUpdate.css({"position":"relative","text-align":"center","bottom":"20px","font-size":"10px","margin":"0","cursor":"pointer"})
+                div_checkUpdate.prepend(new_checkUpdate)
+            }
             
 
             
@@ -2055,9 +2067,9 @@
             btn_icon.click((e)=>{
                 const is_checked=btn_icon.hasClass('is-checked')
                 if(is_checked){
-                    ElementPlus.ElNotification({ title: "律师函警告", message: "真爱粉都得屎",type:"error"});
+                    ElementPlus.ElNotification({ title: "律师函警告", message: "真爱粉都得屎",type:"warning"});
                 }else{
-                    ElementPlus.ElNotification({ title: "律师函撤回", message: "主打一个听劝",type:"success"});
+                    ElementPlus.ElNotification({ title: "律师函撤回", message: "主打一个听劝",type:"info"});
                 }
             })
 
@@ -2110,6 +2122,43 @@
             }
         }, 3000);
     }
+    function check_update() {
+        // 检查更新
+        if (new_checkUpdate) {
+            new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:blue' >检测中...</span>")
+        }
+        $.get( "https://update.greasyfork.org/scripts/508068/%F0%9F%90%94%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B%E3%80%91.meta.js", data =>{
+            let text_list = data.split("\n")
+            for (let index = 0; index < text_list.length; index++) {
+                const element = text_list[index]
+                if (element.slice(0,11) == "// @version") {
+                    let version = element.slice(11,).trim()
+                    if (version > script_version) {
+                        console.log(version)
+                        ElementPlus.ElNotification({ title: "检测到脚本有新版本可用", message: "将自动跳转到更新界面",type:"waring"});
+                        if (new_checkUpdate) {
+                            new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span>")
+                        }
+                        
+                        setTimeout(() => {
+                            window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                        },3000)
+                    }else{
+                        if (formStore.forminput.checkUpdate) {
+                            
+                            ElementPlus.ElNotification({ title: "自检完成", message: "脚本已是最新版本",type:"success"});
+                            if (new_checkUpdate) {
+                                new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:green'>已是最新版本</span>")
+                            }
+                           
+                        }
+                    }
+                    break
+                }
+            }
+        })
+    }
+
     
     // csbutton.click((e)=>{
         
@@ -2187,7 +2236,12 @@
     //         clearInterval(check_video)
     //     }
     // }, 1000);
-    
+    if (window.frames.length !== parent.frames.length) {
+        console.log('当前log所处页面被嵌套在iframe中');
+    } else {
+        console.log('当前log所处页面没有被嵌套在iframe中');
+        check_update()
+    }
 
 })(Vue, Pinia, ElementPlus, md5, $);
 

@@ -2,6 +2,14 @@
 
 *日志使用 [Simple Changelog 汉化版](https://github.com/NiButCrazy/simple-changelog-Chinese) 生成*
 
+## [1.0.5] - 2024-09-18
+### 新增内容
+- 添加自动检查更新的功能
+
+### 作出更改
+- 美化了坤坤通知图标
+
+
 ## [1.0.4] - 2024-09-17
 ### 新增内容
 - 添加自动刷新页面的选项
