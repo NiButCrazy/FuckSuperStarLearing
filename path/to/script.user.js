@@ -2144,13 +2144,12 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
                             window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
                         },3000)
                     }else{
+                        if (new_checkUpdate) {
+                            new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:green'>已是最新版本</span>")
+                        }
                         if (formStore.forminput.checkUpdate) {
                             
                             ElementPlus.ElNotification({ title: "自检完成", message: "脚本已是最新版本",type:"success"});
-                            if (new_checkUpdate) {
-                                new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:green'>已是最新版本</span>")
-                            }
-                           
                         }
                     }
                     break
