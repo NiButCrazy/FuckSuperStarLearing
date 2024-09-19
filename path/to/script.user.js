@@ -1,10 +1,10 @@
-var script_version = "1.0.5"; //内置版本!!!!!!!
+var script_version = "1.0.6"; //内置版本!!!!!!!
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @version      1.0.5
-// @description  [ 1.0.5 ] 添加了自动检查更新的功能，美化了坤坤通知图标，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.0.6
+// @description  [ 1.0.6 ] 添加了更新跳转可能会被浏览器拦截的后续处理，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -2057,7 +2057,7 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
                 }
                 
                 new_checkUpdate.click(check_update)
-                new_checkUpdate.css({"position":"relative","text-align":"center","bottom":"20px","font-size":"10px","margin":"0","cursor":"pointer"})
+                new_checkUpdate.css({"position":"relative","text-align":"center","bottom":"20px","font-size":"13px","margin":"0","cursor":"pointer","color":"gray"})
                 div_checkUpdate.prepend(new_checkUpdate)
             }
             
@@ -2144,11 +2144,21 @@ var script_version = "1.0.5"; //内置版本!!!!!!!
                         console.log(version)
                         ElementPlus.ElNotification({ title: "检测到脚本有新版本可用", message: "将自动跳转到更新界面",type:"warning"});
                         if (new_checkUpdate) {
-                            new_checkUpdate.html("当前版本: "+script_version+" &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span>")
+                            new_checkUpdate.html("当前版本: "+script_version+` &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span>`)
                         }
                         if_updata = true
                         setTimeout(() => {
-                            window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                            const res = window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                            if (res) {
+                                const res2 = window.confirm("您是否已经完成脚本更新？");
+                                if (res2) {
+                                    location.reload()
+                                }else{
+                                    window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                                }
+                            }else{
+                                const res3 = window.confirm("检测到页面未跳转( 可能是被浏览器拦截 )，请检查相关权限设置");
+                            }
                         },3000)
                     }else{
                         if_updata = false

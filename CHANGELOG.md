@@ -2,6 +2,11 @@
 
 *日志使用 [Simple Changelog 汉化版](https://github.com/NiButCrazy/simple-changelog-Chinese) 生成*
 
+## [1.0.6] - 2024-09-19
+### 新增内容
+- 添加更新跳转可能会被浏览器拦截的后续处理
+
+
 ## [1.0.5] - 2024-09-18
 ### 新增内容
 - 添加自动检查更新的功能
