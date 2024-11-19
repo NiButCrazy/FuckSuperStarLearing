@@ -1,10 +1,10 @@
-var script_version = "1.0.6"; //内置版本!!!!!!!
+var script_version = "1.1.0"; //内置版本!!!!!!!
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @version      1.0.6
-// @description  [ 1.0.6 ] 添加了更新跳转可能会被浏览器拦截的后续处理，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.1.0
+// @description  [ 1.1.0 ] 新增加系统通知和主动暂停自动切换功能，并优化了使用体验，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -41,7 +41,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
 // @antifeature  payment  脚本存在第三方答题接口付费功能
 // ==/UserScript==
 
-(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:999}.el-notification{z-index:99999}.el-tabs__content{overflow:visible !important}");
+(t => { if (typeof GM_addStyle == "function") { GM_addStyle(t); return } const i = document.createElement("style"); i.textContent = t, document.head.append(i) })(" .dialog-footer button[data-v-6ed29f7f]:first-child{margin-right:10px}#csbutton[data-v-6ed29f7f]{position:fixed;bottom:20px;right:20px;z-index:99999}#zeokdjg[data-v-c3c6b09f]{position:fixed;left:10px;bottom:50vh;z-index:9999}.question_btn[data-v-c3c6b09f]{width:40px;height:40px;border-radius:10px;margin:5px}.question_div[data-v-c3c6b09f]{height:200px}.question_ti[data-v-c3c6b09f]{margin:10px 0 20px}.cx_log[data-v-c3c6b09f]{margin:2px 0}.status_log[data-v-c3c6b09f]{margin-top:10px}.dialog-footer button[data-v-c3c6b09f]:first-child{margin-right:10px}#csbutton[data-v-c3c6b09f]{position:fixed;bottom:20px;right:20px;z-index:99999}.el-form-item__content{justify-content:flex-end}.el-tabs__content{margin-top:50px}.el-input__wrapper:has(> .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}.el-tooltip__trigger:has(> .el-input__wrapper .el-input__inner[symbol=\"minAccuracy\"]){margin-left:calc(100% - 50px);text-align:center}input[symbol=\"minAccuracy\"]{text-align:center}.el-dialog__body{user-select: none !important}.el-dialog__title{user-select: none !important}:root{--el-border-radius-small:15px !important;--el-border-radius-base:8px !important}div.el-tabs.el-tabs--top.demo-tabs{transition:.2s}div.header{z-index:999}.el-notification{z-index:99999}.el-tabs__content{overflow:visible !important}div#autoJump_btn{transition: all .1s}div#autoJump_btn:hover{opacity:0.7;cursor:pointer}");
 
 (async function (vue, pinia$1, ElementPlus, md5, $$1) {
     var __defProp = Object.defineProperty;
@@ -1628,6 +1628,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
             for (var j = 0; j < options.length; j++)
                 answer[i] == options[j] && matchArr.push(j);
         return matchArr;
+        
     }, clearCurrent = (item, iframeWindow) => {
         $$1(item).find(".answerBg, .textDIV, .eidtDiv").each(function () {
             ($$1(this).find(".check_answer").length || $$1(this).find(".check_answer_dx").length) && $$1(this).click();
@@ -1699,8 +1700,15 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
             _ctx.dialogV = !_ctx.dialogV
             nbc_function()
         }
+        function check_num(num){
+            if ( num <= 1 ){
+                custom_notification("付费答题次数已使用完，请及时查看")
+            }
+            return num
+        }
+        
         const _component_el_button = vue.resolveComponent("el-button"), _component_el_switch = vue.resolveComponent("el-switch"), _component_el_input = vue.resolveComponent("el-input"), _component_el_input_number = vue.resolveComponent("el-input-number"), _component_el_option = vue.resolveComponent("el-option"), _component_el_select = vue.resolveComponent("el-select"), _component_el_checkbox = vue.resolveComponent("el-checkbox"), _component_el_checkbox_group = vue.resolveComponent("el-checkbox-group"), _component_el_tooltip = vue.resolveComponent("el-tooltip"), _component_el_form_item = vue.resolveComponent("el-form-item"), _component_el_tab_pane = vue.resolveComponent("el-tab-pane"), _component_el_tabs = vue.resolveComponent("el-tabs"), _component_el_form = vue.resolveComponent("el-form"), _component_el_dialog = vue.resolveComponent("el-dialog"), _component_el_text = vue.resolveComponent("el-text"), _component_el_skeleton = vue.resolveComponent("el-skeleton"), _component_el_card = vue.resolveComponent("el-card"), _component_el_divider = vue.resolveComponent("el-divider"), _component_el_col = vue.resolveComponent("el-col"), _component_el_row = vue.resolveComponent("el-row"), _component_el_scrollbar = vue.resolveComponent("el-scrollbar"), _component_el_tag = vue.resolveComponent("el-tag"), _component_el_alert = vue.resolveComponent("el-alert"), _component_el_empty = vue.resolveComponent("el-empty");
-        return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, { type: "danger", id: "csbutton", icon: _ctx.Setting, circle: "", onClick: more_function }, null, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogV, "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => _ctx.dialogV = $event), title: "🐔超星修仙通挂科助手", width: "30%", modal: false, center: "", draggable: "" }, { footer: vue.withCtx(() => [vue.createElementVNode("span", _hoisted_1, [vue.createVNode(_component_el_button, { onClick: _cache[2] || (_cache[2] = ($event) => _ctx.dialogV = false) }, { default: vue.withCtx(() => [vue.createTextVNode("取消")]), _: 1 }), vue.createVNode(_component_el_button, { type: "primary", onClick: _cache[3] || (_cache[3] = ($event) => _ctx.submitForm(_ctx.ruleFormRef)) }, { default: vue.withCtx(() => [vue.createTextVNode("保存")]), _: 1 })])]), default: vue.withCtx(() => [vue.createVNode(_component_el_form, { ref: "ruleFormRef", rules: _ctx.rules, model: _ctx.forminput, class: "demo-ruleForm" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tabs, { class: "demo-tabs", modelValue: _ctx.activeName, "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => _ctx.activeName = $event) }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.userConfig, (item) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { key: item.name, label: item.label, name: item.name }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item.config, (item1) => (vue.openBlock(), vue.createBlock(_component_el_form_item, { label: item1.label, prop: item1.name }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tooltip, { class: "box-item", effect: "dark", content: item1.desc || "", placement: "top" }, { default: vue.withCtx(() => ["switch" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_switch, { key: 0, symbol:item1.symbol, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "input" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input, { key: 1, symbol:item1.symbol,modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "number" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input_number, { key: 2, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "select" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_select, { key: 3, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event, placeholder: "请选择" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_option, { key: item2.value, label: item2.label, value: item2.value }, null, 8, ["label", "value"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : "checkbox" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_checkbox_group, { key: 4, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_checkbox, { key: item2.value, label: item2.value, name: item2.value }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item2.label), 1)]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : vue.createCommentVNode("", true)]), _: 2 }, 1032, ["content"])]), _: 2 }, 1032, ["label", "prop"]))), 256))]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 1 }, 8, ["modelValue"])]), _: 1 }, 8, ["rules", "model"])]), _: 1 }, 8, ["modelValue"]), (vue.openBlock(), vue.createBlock(vue.Teleport, { to: "body" }, [vue.createVNode(_component_el_button, { id: "zeokdjg", type: "success", plain: "", round: "", icon: _ctx.Aim, onClick: _cache[5] || (_cache[5] = ($event) => _ctx.dialogVisible = !_ctx.dialogVisible) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString("暂未加载" == _ctx.task.name ? "等待任务加载" : "正在完成:" + _ctx.task.name), 1)]), _: 1 }, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogVisible, "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => _ctx.dialogVisible = $event), width: "400px", title: "🐔超星修仙通挂科助手", modal: false, "append-to-body": false, "lock-scroll": false, center: "", draggable: "" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { style: { "margin-bottom": "20px" }, type: "primary", onClick: more_function, plain: "" }, { default: vue.withCtx(() => [vue.createTextVNode("打开配置")]), _: 1 }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode("")]), _: 1 }), vue.createVNode(_component_el_tabs, { modelValue: _ctx.askActiveName, "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => _ctx.askActiveName = $event), class: "demo-tabs" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tab_pane, { label: "运行框", name: "first" }, { default: vue.withCtx(() => [_ctx.task.work.questionList.length > 0 ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2, [vue.createElementVNode("div", _hoisted_3, [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("h1", _hoisted_4, [vue.createVNode(_component_el_text, { size: "large", truncated: "" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.work.inx + 1 + "." + _ctx.task.work.questionList[_ctx.task.work.inx].question), 1)]), _: 1 })]), _ctx.task.work.questionList[_ctx.task.work.inx].answer ? (vue.openBlock(), vue.createElementBlock("p", _hoisted_6, [vue.createElementVNode("p", null, [vue.createElementVNode("pre", null, vue.toDisplayString(_ctx.task.work.questionList[_ctx.task.work.inx].answer), 1)])])) : (vue.openBlock(), vue.createElementBlock("p", _hoisted_5, [vue.createVNode(_component_el_skeleton, { rows: 3, animated: "" })]))]), _: 1 })]), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_divider, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(" 题号 ")]), _: 1 })) : vue.createCommentVNode("", true), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_scrollbar, { key: 1, height: "100px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_col, { span: 4, key: index }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { type: item.status || "info", plain: "", class: "question_btn", onClick: ($event) => _ctx.handleClick(index) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(index + 1), 1)]), _: 2 }, 1032, ["type", "onClick"])]), _: 2 }, 1024))), 128))]), _: 1 })]), _: 1 })) : vue.createCommentVNode("", true), _ctx.task.work.questionList[_ctx.task.work.inx].allAnswer ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [vue.createVNode(_component_el_divider, null, { default: vue.withCtx(() => [vue.createTextVNode(" 接口返回 ")]), _: 1 }), vue.createVNode(_component_el_tabs, { "tab-position": "left", style: { height: "200px" }, class: "demo-tabs" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList[_ctx.task.work.inx].allAnswer, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { label: item.form }, { default: vue.withCtx(() => [vue.createElementVNode("div", null, [vue.createElementVNode("div", { innerHTML: (item.answer || "暂无答案") + "<br><p style = 'color:red;'>如果要填写付费秘钥，在本悬浮窗最上方的打开配置中填入秘钥，切记填写完要刷新页面才会生效</p>" }, null, 8, _hoisted_8), null != item.num ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "info" }, { default: vue.withCtx(() => [vue.createTextVNode("已用次数:" + vue.toDisplayString(item.usenum), 1)]), _: 2 }, 1024)]), vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "success" }, { default: vue.withCtx(() => [vue.createTextVNode("剩余次数:" + vue.toDisplayString(item.num), 1)]), _: 2 }, 1024)])])) : vue.createCommentVNode("", true)])]), _: 2 }, 1032, ["label"]))), 256))]), _: 1 })])) : vue.createCommentVNode("", true)])) : _ctx.task.video.status ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10, [vue.createVNode(_component_el_alert, { title: "倪爸爸提醒：倍速有风险，挂科两行泪", type: "error", center: "", "show-icon": "" }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode(" 正在完成视频任务 ")]), _: 1 })])) : (vue.openBlock(), vue.createElementBlock("div", _hoisted_11, [vue.createElementVNode("div", _hoisted_12, [vue.createVNode(_component_el_empty, { description: _ctx.task.name }, null, 8, ["description"])])]))]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "运行日志", name: "second" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_scrollbar, { height: "200px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [vue.createVNode(_component_el_col, { span: 24 }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.log, (item, index) => (vue.openBlock(), vue.createElementBlock("p", { key: index, class: "cx_log" }, [vue.createVNode(_component_el_text, { size: "small", type: "info", class: "mx-1" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item.time), 1)]), _: 2 }, 1024), vue.createVNode(_component_el_text, { class: "mx-1", type: "info" == item.type ? "" : item.type }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(" " + item.msg), 1)]), _: 2 }, 1032, ["type"])]))), 128))]), _: 1 })]), _: 1 })]), _: 1 })]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "公告", name: "msg" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("div", { innerHTML: _ctx.msg }, null, 8, _hoisted_13)]), _: 1 })]), _: 1 })]), _: 1 }, 8, ["modelValue"]), vue.createElementVNode("p", null, [_ctx.task.status ? (vue.openBlock(), vue.createBlock(_component_el_tag, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.status), 1)]), _: 1 })) : vue.createCommentVNode("", true)])]), _: 1 }, 8, ["modelValue"])]))], 64);
+        return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [vue.createVNode(_component_el_button, { type: "danger", id: "csbutton", icon: _ctx.Setting, circle: "", onClick: more_function }, null, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogV, "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => _ctx.dialogV = $event), title: "🐔超星修仙通挂科助手", width: "30%", modal: false, center: "", draggable: "" }, { footer: vue.withCtx(() => [vue.createElementVNode("span", _hoisted_1, [vue.createVNode(_component_el_button, { onClick: _cache[2] || (_cache[2] = ($event) => _ctx.dialogV = false) }, { default: vue.withCtx(() => [vue.createTextVNode("取消")]), _: 1 }), vue.createVNode(_component_el_button, { type: "primary", onClick: _cache[3] || (_cache[3] = ($event) => _ctx.submitForm(_ctx.ruleFormRef)) }, { default: vue.withCtx(() => [vue.createTextVNode("保存")]), _: 1 })])]), default: vue.withCtx(() => [vue.createVNode(_component_el_form, { ref: "ruleFormRef", rules: _ctx.rules, model: _ctx.forminput, class: "demo-ruleForm" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tabs, { class: "demo-tabs", modelValue: _ctx.activeName, "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => _ctx.activeName = $event) }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.userConfig, (item) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { key: item.name, label: item.label, name: item.name }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item.config, (item1) => (vue.openBlock(), vue.createBlock(_component_el_form_item, { label: item1.label, prop: item1.name }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tooltip, { class: "box-item", effect: "dark", content: item1.desc || "", placement: "top" }, { default: vue.withCtx(() => ["switch" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_switch, { key: 0, symbol:item1.symbol, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "input" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input, { key: 1, symbol:item1.symbol,modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "number" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_input_number, { key: 2, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, null, 8, ["modelValue", "onUpdate:modelValue"])) : "select" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_select, { key: 3, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event, placeholder: "请选择" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_option, { key: item2.value, label: item2.label, value: item2.value }, null, 8, ["label", "value"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : "checkbox" === item1.type ? (vue.openBlock(), vue.createBlock(_component_el_checkbox_group, { key: 4, modelValue: _ctx.forminput[item1.name], "onUpdate:modelValue": ($event) => _ctx.forminput[item1.name] = $event }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(item1.options, (item2) => (vue.openBlock(), vue.createBlock(_component_el_checkbox, { key: item2.value, label: item2.value, name: item2.value }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item2.label), 1)]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 2 }, 1032, ["modelValue", "onUpdate:modelValue"])) : vue.createCommentVNode("", true)]), _: 2 }, 1032, ["content"])]), _: 2 }, 1032, ["label", "prop"]))), 256))]), _: 2 }, 1032, ["label", "name"]))), 128))]), _: 1 }, 8, ["modelValue"])]), _: 1 }, 8, ["rules", "model"])]), _: 1 }, 8, ["modelValue"]), (vue.openBlock(), vue.createBlock(vue.Teleport, { to: "body" }, [vue.createVNode(_component_el_button, { id: "zeokdjg", type: "success", plain: "", round: "", icon: _ctx.Aim, onClick: _cache[5] || (_cache[5] = ($event) => _ctx.dialogVisible = !_ctx.dialogVisible) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString("暂未加载" == _ctx.task.name ? "等待任务加载" : "正在完成:" + _ctx.task.name), 1)]), _: 1 }, 8, ["icon"]), vue.createVNode(_component_el_dialog, { modelValue: _ctx.dialogVisible, "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => _ctx.dialogVisible = $event), width: "400px", title: "🐔超星修仙通挂科助手", modal: false, "append-to-body": false, "lock-scroll": false, center: "", draggable: "" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { style: { "margin-bottom": "20px" }, type: "primary", onClick: more_function, plain: "" }, { default: vue.withCtx(() => [vue.createTextVNode("打开配置")]), _: 1 }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode("")]), _: 1 }), vue.createVNode(_component_el_tabs, { modelValue: _ctx.askActiveName, "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => _ctx.askActiveName = $event), class: "demo-tabs" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_tab_pane, { label: "运行框", name: "first" }, { default: vue.withCtx(() => [_ctx.task.work.questionList.length > 0 ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2, [vue.createElementVNode("div", _hoisted_3, [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("h1", _hoisted_4, [vue.createVNode(_component_el_text, { size: "large", truncated: "" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.work.inx + 1 + "." + _ctx.task.work.questionList[_ctx.task.work.inx].question), 1)]), _: 1 })]), _ctx.task.work.questionList[_ctx.task.work.inx].answer ? (vue.openBlock(), vue.createElementBlock("p", _hoisted_6, [vue.createElementVNode("p", null, [vue.createElementVNode("pre", null, vue.toDisplayString(_ctx.task.work.questionList[_ctx.task.work.inx].answer), 1)])])) : (vue.openBlock(), vue.createElementBlock("p", _hoisted_5, [vue.createVNode(_component_el_skeleton, { rows: 3, animated: "" })]))]), _: 1 })]), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_divider, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(" 题号 ")]), _: 1 })) : vue.createCommentVNode("", true), "考试" != _ctx.task.name ? (vue.openBlock(), vue.createBlock(_component_el_scrollbar, { key: 1, height: "100px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_col, { span: 4, key: index }, { default: vue.withCtx(() => [vue.createVNode(_component_el_button, { type: item.status || "info", plain: "", class: "question_btn", onClick: ($event) => _ctx.handleClick(index) }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(index + 1), 1)]), _: 2 }, 1032, ["type", "onClick"])]), _: 2 }, 1024))), 128))]), _: 1 })]), _: 1 })) : vue.createCommentVNode("", true), _ctx.task.work.questionList[_ctx.task.work.inx].allAnswer ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [vue.createVNode(_component_el_divider, null, { default: vue.withCtx(() => [vue.createTextVNode(" 接口返回 ")]), _: 1 }), vue.createVNode(_component_el_tabs, { "tab-position": "left", style: { height: "200px" }, class: "demo-tabs" }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.work.questionList[_ctx.task.work.inx].allAnswer, (item, index) => (vue.openBlock(), vue.createBlock(_component_el_tab_pane, { label: item.form }, { default: vue.withCtx(() => [vue.createElementVNode("div", null, [vue.createElementVNode("div", { innerHTML: (item.answer || "暂无答案") + "<br><p style = 'color:red;'>如果要填写付费秘钥，在本悬浮窗最上方的打开配置中填入秘钥，切记填写完要刷新页面才会生效</p>" }, null, 8, _hoisted_8), null != item.num ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "info" }, { default: vue.withCtx(() => [vue.createTextVNode("已用次数:" + vue.toDisplayString(item.usenum), 1)]), _: 2 }, 1024)]), vue.createElementVNode("div", null, [vue.createVNode(_component_el_tag, { class: "ml-2", type: "success" }, { default: vue.withCtx(() => [vue.createTextVNode("剩余次数:" + vue.toDisplayString(check_num()), 1)]), _: 2 }, 1024)])])) : vue.createCommentVNode("", true)])]), _: 2 }, 1032, ["label"]))), 256))]), _: 1 })])) : vue.createCommentVNode("", true)])) : _ctx.task.video.status ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_10, [vue.createVNode(_component_el_alert, { title: "倪爸爸提醒：倍速有风险，挂科两行泪", type: "error", center: "", "show-icon": "" }), vue.createVNode(_component_el_text, { class: "mx-1", size: "large", type: "danger" }, { default: vue.withCtx(() => [vue.createTextVNode(" 正在完成视频任务 ")]), _: 1 })])) : (vue.openBlock(), vue.createElementBlock("div", _hoisted_11, [vue.createElementVNode("div", _hoisted_12, [vue.createVNode(_component_el_empty, { description: _ctx.task.name }, null, 8, ["description"])])]))]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "运行日志", name: "second" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_scrollbar, { height: "200px" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_row, null, { default: vue.withCtx(() => [vue.createVNode(_component_el_col, { span: 24 }, { default: vue.withCtx(() => [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.task.log, (item, index) => (vue.openBlock(), vue.createElementBlock("p", { key: index, class: "cx_log" }, [vue.createVNode(_component_el_text, { size: "small", type: "info", class: "mx-1" }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(item.time), 1)]), _: 2 }, 1024), vue.createVNode(_component_el_text, { class: "mx-1", type: "info" == item.type ? "" : item.type }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(" " + item.msg), 1)]), _: 2 }, 1032, ["type"])]))), 128))]), _: 1 })]), _: 1 })]), _: 1 })]), _: 1 }), vue.createVNode(_component_el_tab_pane, { label: "公告", name: "msg" }, { default: vue.withCtx(() => [vue.createVNode(_component_el_card, { shadow: "hover" }, { default: vue.withCtx(() => [vue.createElementVNode("div", { innerHTML: _ctx.msg }, null, 8, _hoisted_13)]), _: 1 })]), _: 1 })]), _: 1 }, 8, ["modelValue"]), vue.createElementVNode("p", null, [_ctx.task.status ? (vue.openBlock(), vue.createBlock(_component_el_tag, { key: 0 }, { default: vue.withCtx(() => [vue.createTextVNode(vue.toDisplayString(_ctx.task.status), 1)]), _: 1 })) : vue.createCommentVNode("", true)])]), _: 1 }, 8, ["modelValue"])]))], 64);
     }], ["__scopeId", "data-v-c3c6b09f"]]);
     class Cx {
         constructor() {
@@ -1725,7 +1733,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                     confirmButtonText: "确认", callback: () => {
                         audio.play();
                     }
-                }) : console.error("视频播放失败，原因：", error);
+                }) : (console.error("视频播放失败，原因：", error),custom_notification("视频播放失败","请及时查看原因"));
             }), new Promise((resolve) => {
                 const intervalId = setInterval(() => {
                     audio.ended ? (clearInterval(intervalId), log("监听到音频已完成", "success"), resolve()) : audio.paused && audio.play();
@@ -1738,6 +1746,9 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
         async video(iframeWindow) {
             this.askStore.reset(), this.askStore.task.name = "视频", this.askStore.task.video.status = 1, await waitElementLoaded(iframeWindow, "#video_html5_api"), console.log("视频加载完成");
             const player = iframeWindow.videojs("video_html5_api"), playerButton = iframeWindow.document.querySelector(".vjs-big-play-button");
+            player.on('error',()=>{
+                custom_notification("视频播放失败","请及时查看原因")
+            })
             player.muted(true), player.playbackRate(this.defaultConfig.videoRate), player.play(), await new Promise((resolve) => {
                 const intervalId = setInterval(() => {
                     "isUnFinishJob" in iframeWindow && iframeWindow.isUnFinishJob() ? player.paused() && (playerButton == null ? void 0 : playerButton.click()) : (clearInterval(intervalId), resolve());
@@ -1768,8 +1779,11 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                     let tmp = fillAnswer(data, ques[i], Timu[i], iframeWindow);
                     tmp ? (this.askStore.get(i).status = "primary", this.askStore.get(i).answer = tmp, succ++) : (this.askStore.get(i).status = "danger", this.askStore.get(i).answer = "暂无答案"), this.askStore.get(i).dom = Timu[i];
                 }
-                this.defaultConfig.autoSubmit ? (succ / ques.length < this.defaultConfig.minAccuracy ? (this.askStore.log("章节测验正确率不足，暂存", "error"), iframeWindow.alert = function (e) {
+                this.defaultConfig.autoSubmit ? (succ / ques.length < this.defaultConfig.minAccuracy ? (this.askStore.log("章节测验正确率不足，暂存", "error"), custom_notification('请手动回答剩余题目','章节测验正确率不足，暂存'),iframeWindow.alert = function (e) {
                     console.log("alert 方法被阻止", e);
+                    if (formStore.forminput.autoJump){
+                        $('#autoJump_btn')[0].click()
+                    }
                 }, iframeWindow.noSubmit()) : (iframeWindow.btnBlueSubmit(), await sleep(3), iframeWindow.submitCheckTimes(), this.askStore.log("章节测验已完成", "success")), this.askStore.task.status = `章节测验已完成，等待切换,正确率:${succ}/${ques.length}`, resolve()) : (this.askStore.log("已完成答题，未开启自动提交，等待手动提交中", "success"), this.askStore.task.status = `正在等待手动提交,正确率:${succ}/${ques.length}`);
             });
         }
@@ -1804,7 +1818,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                 if (tmp ? (this.askStore.get(0).status = "primary", this.askStore.get(0).answer = tmp) : (this.askStore.get(0).status = "danger", this.askStore.get(0).answer = "暂无答案"), this.defaultConfig.autoExam) {
                     await sleep(this.defaultConfig.answerInterval);
                     const nextButton = $('.nextDiv .jb_btn:contains("下一题")');
-                    nextButton ? nextButton.click() : (this.askStore.log("已完成答题，请自行检查答案填写后自行提交", "success"), this.askStore.task.status = "已完成答题，请自行检查答案填写后自行提交");
+                    nextButton ? nextButton.click() : (this.askStore.log("已完成答题，请自行检查答案填写后自行提交", "success"),custom_notification("已完成考试答题",'请自行检查答案填写后自行提交'), this.askStore.task.status = "已完成答题，请自行检查答案填写后自行提交");
                 } else
                     this.askStore.task.status = "未开启自动切换，等待手动切换";
             });
@@ -1899,6 +1913,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                 const cardsIframe = _self.document.querySelector("#iframe");
                 await waitIframeLoaded(cardsIframe);
                 const _self1 = cardsIframe.contentWindow;
+                let is_live = false //  判断是不是直播视频
                 top.scroll2Job();
                 let jobList = _self1.document.querySelectorAll(".ans-job-icon") || [];
                 for (let i = 0; i < jobList.length; i++) {
@@ -1931,11 +1946,34 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                                 continue;
                             }
                             iframe && (await waitIframeLoaded(iframe), await cxModel.audio(iframe.contentWindow), cxModel.askStore.log("音频任务已完成", "success"));
-                        } else
+                        }else if (iframe == null ? void 0 : iframe.src.match(/\/ananas\/modules\/live\/index.html/)){
+                            cxModel.askStore.log("检测到畜生直播任务，请用户手动观看", "success")
+                            custom_notification("检测到直播任务，正在尝试自动跳转", "由于脚本处于测试阶段，可能会失败")
+                            is_live = true
+                            let jq_iframe = $(iframe)
+                            let iframeDocument = jq_iframe.contents();
+                            // 在iframe的内容文档中查找指定元素
+                            let targetElement = iframeDocument.find('.liveHref');
+                            // 对找到的元素进行操作
+                            if (targetElement.length) {
+                                console.log('找到目标元素:', targetElement);
+                                let parent_node = targetElement[0].parentNode
+                                const target_href = parent_node.nextElementSibling.href
+                                if(formStore.forminput.autoJump){
+                                    targetElement[0].click();
+                                }
+                                
+                            } else {
+                                console.log('未找到目标元素');
+                            }
+                        } 
+                        else
                             (iframe == null ? void 0 : iframe.src.match(/\/ananas\/modules\/pdf\/index.html/)) ? (log("文档", "error"), iframe && (await waitIframeLoaded(iframe), await cxModel.pdf(iframe.contentWindow), cxModel.askStore.log("pdf任务已完成", "success"))) : (console.log(iframe == null ? void 0 : iframe.src, "未知"), cxModel.askStore.log("未知任务跳过", "success"));
                     }
                 }
-                await sleep(formStore.forminput.interval), !formStore.forminput.autoJump && cxModel.askStore.msg("由于未开启自动切换,请手动切换"), formStore.forminput.autoJump && (top == null ? void 0 : top.document.querySelector(".nextChapter").click());
+                await sleep(formStore.forminput.interval), 
+                !formStore.forminput.autoJump && !is_live && (cxModel.askStore.msg("由于未开启自动切换,请手动切换"), custom_notification('超星修仙通',"由于未开启自动切换,请手动切换")), 
+                formStore.forminput.autoJump && !is_live && (top == null ? void 0 : top.document.querySelector(".nextChapter").click());
             };
             setInterval(async () => {
                 await waitElementLoaded(_self, "#iframe");
@@ -1968,9 +2006,9 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
         try {
             icon1=$(".icon-head")
             icon2=$(".head-img")
-            $("h5[title='课程']").text("舞蹈课程")
-            $("h5[title='大赛']").text("NBA大赛")
-            $("h5[title='笔记']").text("RAP笔记")
+            $("h3[title='课程']").text("舞蹈课程")
+            $("h3[title='大赛']").text("NBA大赛")
+            $("h3[title='笔记']").text("RAP笔记")
             $("#siteName").text("蔡虚鲲应援粉丝团")
             
             icon1.next().text("账号:ikun")
@@ -2129,6 +2167,8 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
         }, 3000);
     }
     var if_updata = false;
+    update_time_interval = 3600000 //默认检测更新的时间间隔为1小时
+    // update_time_interval = 10000
     function check_update() {
         // 检查更新
         if (new_checkUpdate) {
@@ -2143,6 +2183,7 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
                     if (version > script_version) {
                         console.log(version)
                         ElementPlus.ElNotification({ title: "检测到脚本有新版本可用", message: "将自动跳转到更新界面",type:"warning"});
+                        custom_notification("修仙通脚本提醒您", "检测到新版本，请前往更新")
                         if (new_checkUpdate) {
                             new_checkUpdate.html("当前版本: "+script_version+` &nbsp&nbsp <span style='color:red'>检测到有新版本可用</span>`)
                         }
@@ -2175,90 +2216,112 @@ var script_version = "1.0.6"; //内置版本!!!!!!!
             }
         })
     }
-
     
-    // csbutton.click((e)=>{
-        
-    //     var btn_autoVideo=$('div[symbol="autoVideo"]')
-    //     var btn_autoJump=$('div[symbol="autoJump"]')
-    //     var label=btn_autoJump.parent().prev()
-    //     var switch_exam=$("#pane-exam")
-    //     var ikun=null
-    //     switch_exam.css("overflow","visible")
-        
-    //     if (switch_exam.find('img').length == 0) {
-    //         var new_img=$('<img id="ikun" src="https://i0.hdslb.com/bfs/article/66762246d5de03d98440e90f69e6524f293738dc.jpg@!web-article-pic.avif" width="100%" title="小黑子别戳我" style="border-radius:12px">')
-    //         new_img.click(switch_img)
-    //         switch_exam.append(new_img)
-    //         ikun=$("#ikun")
-    //     }
-    //     if (!btn_autoVideo.hasClass('is-checked')) {
-    //         btn_autoJump.css("pointer-events","none")
-    //         label.css("pointer-events","none")
-    //         btn_autoJump.css("opacity","0.4")
-    //         label.html("自动切换<span style='opacity:0.3'>(必须先开启自动视频)</span>")
-    //         formStore.forminput.autoJump=false
-    //     }
-        
-        
-    //     // var btn_tab_exam=$("#tab_exam")
-    //     // var btn_tab_chapter=$("#tab_chapter")
-    //     // var btn_tab_base=$("#tab_base")
-    //     // var nbc_body=$(".el-dialog__body")
-    //     // btn_tab_base.click((e)=>{
-    //     //     nbc_body.find('img').remove()
-    //     // })
-    //     // btn_tab_exam.click((e)=>{
-    //     //     btn_tab_exam.after('<img src="https://www.runoob.com/images/pulpit.jpg">')
-    //     // })
-    //     // btn_tab_chapter.click((e)=>{
-    //     //     nbc_body.find('img').remove()
-    //     // })
-        
-    //     btn_autoVideo.click((e)=>{
-    //         const is_checked=btn_autoVideo.hasClass('is-checked')
-    //         btn_autoJump.css("transition",".2s")
-    //         if(is_checked){
-    //             btn_autoJump.css("pointer-events","auto")
-    //             btn_autoJump.css("opacity","1")
-    //             label.css("pointer-events","none")
-    //             label.text("自动切换")
-                
-    //         }else{
-    //             btn_autoJump.css("pointer-events","none")
-    //             label.css("pointer-events","none")
-    //             btn_autoJump.css("opacity","0.4")
-    //             label.html("自动切换<span style='opacity:0.3'>(必须先开启自动视频)</span>")
-    //             formStore.forminput.autoJump=false
-    //         }
-    //     })
-    // })
-    // var videoPlyer=$("iframe")[0].contentWindow.videojs("video_html5_api")
-    // videoPlyer.playbackRate(defaultConfig.videoRate)
-    // var video_dom=$("#video_html5_api")
-    // var videoPlayer =null
-    // var check_video=setInterval(() => {
-    //     if (video_dom[0] == undefined) {
-    //         video_dom=$("#video_html5_api")
-    //     }else{
-    //         video_dom[0].playbackRate=defaultConfig.videoRate
-    //         videoPlayer = videojs("#video_html5_api")
-    //         console.log(videoPlayer)
-    //         videoPlayer.options_.playbackRates=[0.75,1,1.25,1.5,16]
-    //         videoPlayer.on('play', function() {
-    //             // 设置播放速度
-    //             videoPlayer.playbackRate(16);
-    //             console.log("开始播放")
-    //         });
-    //         clearInterval(check_video)
-    //     }
-    // }, 1000);
-    if (window.frames.length !== parent.frames.length) {
-        console.log('当前log所处页面被嵌套在iframe中');
-    } else {
-        console.log('当前log所处页面没有被嵌套在iframe中');
-        check_update()
+    function custom_notification( title, text){
+        if (!("Notification" in window)) {
+            console.error("这个浏览器不支持通知");
+        }else{
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                    } else {
+                        alert("已拒绝通知权限");
+                    }
+                });
+            }else{
+                const notification = new Notification(title, { 
+                    body: text,
+                    icon: "http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg",
+                });
+                notification.onclick = function () {
+                    window.focus()
+                }
+            }
+        }
     }
+    
+
+    if (window.frames.length !== parent.frames.length) {
+        console.log('log被嵌套iframe中');
+    } else {
+        var app_div = $('#cccxapp')
+        var autoJump_btn = $(document.createElement('div'))
+        var pause_img = $(`<svg t="1731924575817" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4271" width="200" height="200"><path d="M268.97201558 114.31784297c73.21218086 0 132.56071902 59.34853814 132.56071901 132.560719v530.24287606c0 73.21218086-59.34853814 132.56071902-132.56071901 132.560719s-132.56071902-59.34853814-132.56071901-132.560719V246.87856197c0-73.21218086 59.34853814-132.56071902 132.56071901-132.560719z m486.05596884 0c73.21218086 0 132.56071902 59.34853814 132.56071901 132.560719v530.24287606c0 73.21218086-59.34853814 132.56071902-132.56071901 132.560719s-132.56071902-59.34853814-132.56071901-132.560719V246.87856197c0-73.21218086 59.34853814-132.56071902 132.56071901-132.560719z" p-id="4272" fill="#ffffff"></path></svg>`)
+        var play_img = $(`<svg t="1732009997506" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4263" width="200" height="200"><path d="M213.333333 278.698667C213.333333 179.2 321.877333 117.76 407.168 168.96l388.821333 233.301333c82.858667 49.706667 82.858667 169.813333 0 219.477334L407.168 855.04C321.834667 906.24 213.333333 844.8 213.333333 745.301333V278.698667z" fill="#ffffff" p-id="4264"></path></svg>`)
+        autoJump_btn.attr('id', 'autoJump_btn')
+        autoJump_btn.attr('title', '[ 启用/关闭 ] 自动切换')
+        pause_img.css({ width: '15px', height: '15px', 'margin': '8.5px' })
+        play_img.css({ width: '15px', height: '15px', 'margin': '8.5px' })
+        autoJump_btn.css({
+           position: 'fixed', 
+           width: '32px',
+           height: '32px',
+           'border-radius': '50%',
+           background: '#66ccff',
+           right: '20px',
+           bottom: '70px',
+           'z-index': '9999'
+         })
+        autoJump_btn.append(pause_img)
+        autoJump_btn.append(play_img)
+        if (formStore.forminput.autoJump){
+            play_img.css('display', 'none')
+        }else{
+            pause_img.css('display', 'none')
+        }
+        app_div.append(autoJump_btn)
+        autoJump_btn.on('click', function(){
+            if (formStore.forminput.autoJump){
+                formStore.forminput.autoJump = false
+                play_img.css('display', 'block')
+                pause_img.css('display', 'none')
+            }else{
+                formStore.forminput.autoJump = true
+                play_img.css('display', 'none')
+                pause_img.css('display', 'block')
+                location.reload()
+            }
+        })
+        console.log('当前log所处页面没有被嵌套在iframe中');
+        if (localStorage.getItem("last_update_time") == undefined){
+            localStorage.setItem("last_update_time", Date.now())
+        }else{
+            var last_update_time = localStorage.getItem("last_update_time")
+            now_time = Date.now()
+            if (now_time - last_update_time > update_time_interval) {
+                check_update()
+                localStorage.removeItem("last_update_time")
+            }
+        let href = location.href
+        if (href.slice(0, 27) == 'https://zhibo.chaoxing.com/'){
+            console.log('脚本已注入直播间');
+            let live_video = videojs('video',{ "poster": "", "controls": "true","autoplay":"true","muted":'true',"playbackRates": playbackRates},function(){
+	  	        //暂停--播放完毕后也会暂停
+	  	        this.on('pause', function() {
+					playing = false;
+	  	        });
+                this.on('play', function() {
+					playing = true;
+                    live_video.volume(0)
+	  	        });
+	  	        // 结束
+	  	        this.on('ended', function() {
+	  	            custom_notification("直播已结束", "请手动关闭并前往下一个任务")
+					playing = false;
+                    
+	  	        });
+	  	        // 错误
+	  	        this.on('error', function() {
+	  	            custom_notification("直播发生错误", "请及时查看")
+					playing = false;
+                    
+	  	        });
+            })
+            live_video.volume(0)
+        }
+    }
+    }
+    
 
 })(Vue, Pinia, ElementPlus, md5, $);
 
