@@ -1,10 +1,10 @@
-var script_version = "1.1.0"; //内置版本!!!!!!!
+var script_version = "1.1.1"; //内置版本!!!!!!!
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearing
 // @author       倪爸爸
-// @version      1.1.0
-// @description  [ 1.1.0 ] 新增加系统通知和主动暂停自动切换功能，并优化了使用体验，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.1.1
+// @description  [ 1.1.1 ] 新增自动刷新错误视频的选项(测试，可能将会导致意想不到的卡任务)，并优化了更新逻辑，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
@@ -61,7 +61,7 @@ var script_version = "1.1.0"; //内置版本!!!!!!!
         return config || defaultConfig$1;
     }, defaultConfig$1 = { 
         debugger: false, autoAnswer: true, autoVideo: true, autoVideoAnswer:true, icon:false, autoJump: true, autoSubmit: true, thtoken: "", yztoken: "", gptKey: "",gptModel: "gpt-3.5-turbo", gpt: false, gptType: ["0", "1", "2", "3", "4", "5", "6", "7"], interval: 3, 
-        answerInterval: 3, minAccuracy: 0.8, videoRate: 1,checkUpdate:true,autoRefresh: false, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
+        answerInterval: 3, minAccuracy: 0.8, videoRate: 1,checkUpdate:true, autoRefresh: false,autoVideoRefresh:false, autoExam: true, hideExam: false, notice: "这脚本源代码不是我写的，我只负责增加功能与优化体验，有重大BUG与我无瓜！" }, userConfig = [
             { name: "base", label: "基础配置", config: [
                 { name: "icon",symbol: "icon", label: "本地黑化", type: "switch", value: defaultConfig$1.icon, desc: "获得鸽鸽的无上力量" }, 
                 { name: "autoRefresh",symbol: "autoRefresh", label: "自动刷新", type: "switch", value: defaultConfig$1.autoRefresh, desc: "保存配置后自动刷新页面" }, 
@@ -81,8 +81,9 @@ var script_version = "1.1.0"; //内置版本!!!!!!!
                 { name: "minAccuracy",symbol: "minAccuracy", label: "最低正确率", type: "input", value: defaultConfig$1.minAccuracy, desc: "不满足最低正确率则不会自动提交答案" }
             ] 
             }, 
-            { name: "exam", label: "作业/考试/更新配置", config: [
+            { name: "exam", label: "考试/更新/其他配置", config: [
                 { name: "checkUpdate",symbol:"checkUpdate", label: "更新自检通知", type: "switch", value: defaultConfig$1.checkUpdate, desc: "是否显示自检通知" },
+                { name: "autoVideoRefresh",symbol:"autoVideoRefresh", label: "自动刷新视频", type: "switch", value: defaultConfig$1.autoVideoRefresh, desc: "视频播放错误时自动刷新网页(Beta)" },
                 { name: "autoExam", label: "考试自动切换", type: "switch", value: defaultConfig$1.autoExam, desc: "考试会自动切换题目" }
             ] 
             }
@@ -1747,7 +1748,16 @@ var script_version = "1.1.0"; //内置版本!!!!!!!
             this.askStore.reset(), this.askStore.task.name = "视频", this.askStore.task.video.status = 1, await waitElementLoaded(iframeWindow, "#video_html5_api"), console.log("视频加载完成");
             const player = iframeWindow.videojs("video_html5_api"), playerButton = iframeWindow.document.querySelector(".vjs-big-play-button");
             player.on('error',()=>{
-                custom_notification("视频播放失败","请及时查看原因")
+                if(formStore.forminput.autoVideoRefresh){
+                    custom_notification("视频播放失败","即将自动刷新")
+                    setTimeout(()=>{
+                        location.reload()
+                    },2000)
+                }else{
+                    custom_notification("视频播放失败","请及时查看原因")
+                }
+                
+                
             })
             player.muted(true), player.playbackRate(this.defaultConfig.videoRate), player.play(), await new Promise((resolve) => {
                 const intervalId = setInterval(() => {
@@ -2189,18 +2199,17 @@ var script_version = "1.1.0"; //内置版本!!!!!!!
                         }
                         if_updata = true
                         setTimeout(() => {
-                            const res = window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
-                            if (res) {
-                                const res2 = window.confirm("您是否已经完成脚本更新？");
-                                if (res2) {
-                                    location.reload()
+                            const res2 = window.confirm("是否前往脚本更新界面？");
+                            if (res2) {
+                                const res = window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                                if (res) {
+                                    
                                 }else{
-                                    window.open("https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B")
+                                    custom_notification("检测到页面未跳转( 可能是被浏览器拦截 )，请检查相关权限设置");
                                 }
-                            }else{
-                                const res3 = window.confirm("检测到页面未跳转( 可能是被浏览器拦截 )，请检查相关权限设置");
                             }
                         },3000)
+                        
                     }else{
                         if_updata = false
                         if (new_checkUpdate) {
