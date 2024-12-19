@@ -20,7 +20,7 @@ FuckSuperStarLearing
 * ***小黑子警告***
 
 ## 脚本下载
-https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B
+[greasyfork](https://greasyfork.org/zh-CN/scripts/508068-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%8C%82%E7%A7%91%E5%8A%A9%E6%89%8B)
 
 ## 更新日志
 [点我查看](https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
