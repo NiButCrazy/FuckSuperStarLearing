@@ -1774,6 +1774,7 @@ var script_version = "1.1.2"; //内置版本!!!!!!!
         work(iframeWindow) {
             return new Promise(async (resolve) => {
                 decode(iframeWindow);
+                
                 const Timu = iframeWindow.document.querySelectorAll(".TiMu");
                 if (!Timu)
                     return void resolve();
@@ -1795,7 +1796,23 @@ var script_version = "1.1.2"; //内置版本!!!!!!!
                     if (formStore.forminput.autoJump){
                         $('#autoJump_btn')[0].click()
                     }
-                }, iframeWindow.noSubmit()) : (iframeWindow.btnBlueSubmit(), await sleep(3), iframeWindow.submitCheckTimes(), this.askStore.log("章节测验已完成", "success")), this.askStore.task.status = `章节测验已完成，等待切换,正确率:${succ}/${ques.length}`, resolve()) : (this.askStore.log("已完成答题，未开启自动提交，等待手动提交中", "success"), this.askStore.task.status = `正在等待手动提交,正确率:${succ}/${ques.length}`);
+                }, iframeWindow.noSubmit()) : (
+                    (()=>{
+                        const submit_btn = iframeWindow.document.querySelector('a[onclick="btnBlueSubmit();"]')
+                        if (submit_btn) {
+                            submit_btn.click()
+                        }else{ 
+                            iframeWindow.btnBlueSubmit()
+                        }
+                    })(),
+                    await sleep(3), 
+                    iframeWindow.submitCheckTimes(), 
+                    this.askStore.log("章节测验已完成", "success")), 
+                    this.askStore.task.status = `章节测验已完成，等待切换,正确率:${succ}/${ques.length}`, resolve()
+                ) : (
+                    this.askStore.log("已完成答题，未开启自动提交，等待手动提交中", "success"), 
+                    this.askStore.task.status = `正在等待手动提交,正确率:${succ}/${ques.length}`
+                );
             });
         }
         homework() {
@@ -2289,6 +2306,28 @@ var script_version = "1.1.2"; //内置版本!!!!!!!
             }
         }
     }
+    function custom_alert(text){
+        if (!("Notification" in window)) {
+            console.error("这个浏览器不支持通知");
+        }else{
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                    } else {
+                        console.log("已拒绝通知权限");
+                    }
+                });
+            }else{
+                const notification = new Notification(title, { 
+                    body: text,
+                    icon: "https://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg",
+                });
+                notification.onclick = function () {
+                    window.focus()
+                }
+            }
+        }
+    }
 
     if (window.frames.length !== parent.frames.length) {
         console.log('log被嵌套iframe中');
@@ -2364,7 +2403,6 @@ var script_version = "1.1.2"; //内置版本!!!!!!!
         }
     }
     }
-    
 
 })(Vue, Pinia, ElementPlus, md5, $);
 
