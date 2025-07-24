@@ -1,10 +1,10 @@
-var script_version = "1.1.2"; //内置版本!!!!!!!
+var script_version = "1.1.2-fix"; //内置版本!!!!!!!
 // ==UserScript==
 // @name         🐔【超星学习通挂科助手】
 // @namespace    FuckSuperStarLearning
 // @author       倪爸爸
-// @version      1.1.2
-// @description  [ 1.1.2 ] 新增自动刷新错误视频的选项(测试，可能将会导致意想不到的卡任务)，并优化了更新逻辑，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
+// @version      1.1.2-fix
+// @description  [ 1.1.2-fix ] 修复了部分场景可能提交失败的BUG，详情见(https://github.com/NiButCrazy/FuckSuperStarLearing/blob/main/CHANGELOG.md)
 // @icon         http://p1.hoopchina.com.cn/personPic/1f83adcf-bc5a-4631-b488-f3c8b64968d2.jpg
 // @match        *://*.chaoxing.com/*
 // @match        *://*.edu.cn/*
